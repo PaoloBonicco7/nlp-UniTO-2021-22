@@ -5,11 +5,11 @@ Dato un frame, dobbiamo costruire un insieme chiamato FrameTerms che sarà compo
 In particolare l'obiettivo è trovare per ogni termine $f$ il senso di WN $s$ che massimizza una certa misura di similarità. 
  
 $$
-\mu(f) = argmax_{s \in Senses_WN}  sim(f,s)
+\mu(f) = \argmax_{s \in Senses_{WN}}  sim(f,s)
 $$
 
 Il calcolo della similiarità si basa sulla costruzione di due contesti di disambiguazione, uno per il frame e uno per il synset. Li chiameremo rispettivamente $Ctx(f)$ e $Ctx(s)$.
-Per quanto riguarda $Ctx(f)$, viene costruito utilizzando la definizione del frame e le definizioni di tutti i Frame Elements che lo compongono. $Ctx(s)$, invece, viene costruito a partire dal gloss e dai sensi dei synset collegati al termine $f$, eventualmente aggiungendo anche quelli di iponimi o iperonimi.
+Per quanto riguarda $Ctx(f)$, viene costruito utilizzando la definizione del frame e le definizioni di tutti i Frame Elements che lo compongono. $Ctx(s)$, invece, viene costruito a partire dal gloss e dai sensi dei synset collegati al termine $f$, aggiungendo anche quelli di iponimi o iperonimi.
 
 In particolare, per calcolare la similarità possiamo seguire due approcci:
 - Bag of words  
@@ -17,14 +17,17 @@ In maniera analoga a BabelNet nell'approccio bag of words la similarità è defi
 $$
 sim(f,s) = |Ctx(f) \cap Ctx(s)| + 1
 $$
-- Grafico 
+- Grafico  
 Nell'approccio grafico, invece, la similarità viene definita come probabilità condizionata di s dato f, cioè come la probabilità che al termine $f$ corrisponda il senso $s$.
 $$ sim(f,s) = p(s|f) $$
 Da notare che dovendo calcolare l'$argmax$ possiamo considerare, invece, la probabilità congiunta $p(s,f)$.
 Per calcolare tale probabilità
-
 $$
 p(s,f) = \frac{score(s,f)}{\sum_{s',f'} score(s',f')}
 $$
+dove $s'$ spazia nei sensi di WN collegati al termine $f$, e $f' \in Ctx(f)$. La funzione $score(s,f)$ in questo caso dipende dalla distanza in WN di $s$ dai sensi di WN di tutte i termini di $Ctx(f)$. In simboli:
 
-dove $s'$ spazia nei sensi di WN collegati al nome del frame $f$, e $f' \in Ctx(f)$. La funzione $score(s,f)$ in questo caso dipende dalla distanza in WN di $s$ dai sensi di WN di tutte i termini di $Ctx(f)$.
+$$
+score(s,f) = \sum_{f'\in Ctx(f)} \sum_{s'\in Senses_{WN}(f')} \sum_{p\in path_{WN}(s,s')} e^{-(len(p) - 1)}
+$$
+
