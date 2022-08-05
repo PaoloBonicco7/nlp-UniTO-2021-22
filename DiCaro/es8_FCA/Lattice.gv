@@ -1,0 +1,82 @@
+// <Lattice object of 5 atoms 21 concepts 4 coatoms at 0x1035f3d60>
+digraph Lattice {
+	node [label="" shape=circle style=filled width=.25]
+	edge [dir=none labeldistance=1.5 minlen=2]
+	c0
+	c0 -> c0 [color=transparent labelangle=90 taillabel="hair venomous"]
+	c1
+	c1 -> c1 [color=transparent headlabel=chicken labelangle=270]
+	c1 -> c1 [color=transparent labelangle=90 taillabel="airborne domestic catsize"]
+	c1 -> c0
+	c2
+	c2 -> c2 [color=transparent headlabel=penguin labelangle=270]
+	c2 -> c0
+	c3
+	c3 -> c3 [color=transparent headlabel=whale labelangle=270]
+	c3 -> c3 [color=transparent labelangle=90 taillabel=fins]
+	c3 -> c0
+	c4
+	c4 -> c4 [color=transparent headlabel=snake labelangle=270]
+	c4 -> c0
+	c5
+	c5 -> c5 [color=transparent labelangle=90 taillabel=feathers]
+	c5 -> c1
+	c5 -> c2
+	c6
+	c6 -> c6 [color=transparent headlabel="leopard lion" labelangle=270]
+	c6 -> c0
+	c7
+	c7 -> c2
+	c7 -> c4
+	c8
+	c8 -> c3
+	c8 -> c4
+	c9
+	c9 -> c5
+	c9 -> c7
+	c10
+	c10 -> c4
+	c10 -> c6
+	c11
+	c11 -> c11 [color=transparent headlabel=octopus labelangle=270]
+	c11 -> c7
+	c12
+	c12 -> c7
+	c12 -> c8
+	c13
+	c13 -> c13 [color=transparent labelangle=90 taillabel=eggs]
+	c13 -> c9
+	c13 -> c11
+	c14
+	c14 -> c7
+	c14 -> c10
+	c15
+	c15 -> c15 [color=transparent labelangle=90 taillabel=aquatic]
+	c15 -> c11
+	c15 -> c12
+	c16
+	c16 -> c16 [color=transparent headlabel="deer giraffe" labelangle=270]
+	c16 -> c16 [color=transparent labelangle=90 taillabel=milk]
+	c16 -> c3
+	c16 -> c6
+	c17
+	c17 -> c17 [color=transparent labelangle=90 taillabel=predator]
+	c17 -> c11
+	c17 -> c14
+	c18
+	c18 -> c18 [color=transparent labelangle=90 taillabel=toothed]
+	c18 -> c8
+	c18 -> c10
+	c18 -> c16
+	c19
+	c19 -> c19 [color=transparent labelangle=90 taillabel="backbone breathes"]
+	c19 -> c9
+	c19 -> c12
+	c19 -> c14
+	c19 -> c18
+	c20
+	c20 -> c13
+	c20 -> c15
+	c20 -> c17
+	c20 -> c19
+}
