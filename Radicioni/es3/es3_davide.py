@@ -4,6 +4,7 @@ from nltk.corpus import wordnet as wn
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 from nltk.tokenize import RegexpTokenizer
+from nltk.corpus.reader.framenet import PrettyList, PrettyDict
 
 # TO-DO LIST:
 # [] inserire in frameSet gli altri frame
@@ -51,7 +52,19 @@ def build_name_context(frame):
     return {frame.name: context}
 
 def build_lu_context(frame):
-    pass
+    fn_lu_context = []
+    for lu_key in frame.lexUnit.keys():
+        lu = frame.lexUnit[lu_key]
+        context = []
+        for word in lu['definition'].split():
+            prep_word = preprocess_word(word)
+            if prep_word is not None and prep_word != "COD":
+                context.append(prep_word)
+        p = lu.name.find('.')
+        tmp = {lu.name[:p]: context}
+        fn_lu_context.append(tmp)
+    return fn_lu_context
+
 
 
 
@@ -64,8 +77,15 @@ lemmatizer = WordNetLemmatizer()
 delete_punctuation_tokenizer = RegexpTokenizer(r'\w+')
 frames_number = [1]
 
+frameTerms = [] # lista di dizionari {nome: contesto}
+
 for i in frames_number:
     frame = fn.frame( frameSet[i]['id'] )
-    fn_name_context = build_name_context(frame)
-    fn_fe_context = build_fes_context(frame)
-    fn_lu_context = build_lu_context(frame)
+    #fn_name_context = build_name_context(frame)
+    #fn_fe_context = build_fes_context(frame)
+    #fn_lu_context = build_lu_context(frame)
+    frameTerms.append(build_fes_context(frame))
+    #frameTerms.append(...build_name_context(frame))
+    #frameTerms.append(...build_lu_context(frame))
+
+    
