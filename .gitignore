@@ -132,3 +132,6 @@ dmypy.json
 
 # macOS metadata
 .DS_Store
+
+# full dataset for es_2
+Radicioni/data/semcor3.0/
