@@ -5,11 +5,14 @@ from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 from nltk.tokenize import RegexpTokenizer
 from pprint import pprint
+import json
+import os
 
 from FrameContexts import FrameContexts # custom class we made to better utilize context sets
 
 L = 3
-MODE = 'graphic'
+#MODE = 'graphic'
+MODE = 'bag_of_words'
 LEMMATIZER = WordNetLemmatizer()
 DELETE_PUNCTUATION_TOKENIZER = RegexpTokenizer(r'\w+')
 
@@ -127,7 +130,6 @@ def syn_distance(synset1, synset2):
 
     return min(list(map(lambda x: len(x), hypernym1))) + min(list(map(lambda x: len(x), hypernym2))) - 2
 
-
 def lowest_common_subsumer(synset1, synset2): #? My function that simulate the WordNet function
     '''
     Args:
@@ -167,22 +169,39 @@ frames_number = [1]
 
 not_found_in_wn = []
 similarities = []
-for i in frames_number:
-    frame = fn.frame( frameSet[i]['id'] )
-    frame_name = frame.name
-    contexts = FrameContexts(frame)
-    #pprint(contexts.get_term_contexts())
-    for term in contexts.get_frame_context():
-        
-        maxSyns, maxSim = find_max_sim_synset(term, contexts)
-        
-        if isinstance(maxSyns, dict) and len(maxSyns) == 0: 
-            not_found_in_wn.append(term)
-            continue
+if os.path.exists('results/result.json'):
+    with open('results/result.json', 'r') as f:
+        json_dict = json.load(f)
+        mapped_frames = json_dict['mapped_frames']
+        all_frames_mapped = True if mapped_frames == frames_number else False
 
-        # Memorizzazione dei risultati ottimi
-        similarities.append([term, maxSyns, maxSim])
-        print(term, maxSyns, maxSim)
+        if all_frames_mapped:
+            similarities = json_dict['similarities']
+            not_found_in_wn = json_dict['not_found_in_wn']
+
+if len(similarities) == 0:
+    for i in frames_number:
+        frame = fn.frame( frameSet[i]['id'] )
+        frame_name = frame.name
+        contexts = FrameContexts(frame)
+        #pprint(contexts.get_term_contexts())
+        for term in contexts.get_frame_context():
+            
+            maxSyns, maxSim = find_max_sim_synset(term, contexts)
+            
+            if isinstance(maxSyns, dict) and len(maxSyns) == 0: 
+                not_found_in_wn.append(term)
+                continue
+
+            # Memorizzazione dei risultati ottimi
+            similarities.append([term, maxSyns.name(), maxSim])
+            #print(term, maxSyns, maxSim)
+        
+        with open('results/result.json', 'w') as f:
+            res = {'similarities': similarities,
+                    'not_found_in_wn': not_found_in_wn,
+                    'mapped_frames': frames_number}
+            json.dump(res,f)
 
         
 print("Results are: ")
