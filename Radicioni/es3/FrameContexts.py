@@ -15,8 +15,6 @@ class FrameContexts():
         self.build_name_context(frame)
         self.build_fes_context(frame)
         self.build_lu_context(frame)
-
-        
         
     def get_term_context(self, term):
         return self.term_context[term]
@@ -60,7 +58,6 @@ class FrameContexts():
             self.term_context[name] = context
             fn_lu_context.update(context)
         self.frame_context.update(fn_lu_context)
-
 
     def _build_word_definition_context(self, fn_word):
         context = set()
