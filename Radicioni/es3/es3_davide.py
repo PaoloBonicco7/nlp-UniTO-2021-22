@@ -4,20 +4,19 @@ from nltk.corpus import wordnet as wn
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 from nltk.tokenize import RegexpTokenizer
+import spacy
 from pprint import pprint
 import json
 import os
-
 from FrameContexts import FrameContexts # custom class we made to better utilize context sets
 
 L = 3
-MODE = 'graphic'
-#MODE = 'bag_of_words'
+#MODE = 'graphic'
+MODE = 'bag_of_words'
 LEMMATIZER = WordNetLemmatizer()
 DELETE_PUNCTUATION_TOKENIZER = RegexpTokenizer(r'\w+')
 
 # TO-DO LIST:
-# [] termini composti
 # [] LU che sono stop words
 
 def flatten(l):
@@ -26,17 +25,45 @@ def flatten(l):
 def preprocess_word(word):
         word = word.lower()
         if not word in stopwords.words():
-                no_punct_word = DELETE_PUNCTUATION_TOKENIZER.tokenize(word)
-                if len(no_punct_word) > 0:
-                    return LEMMATIZER.lemmatize(no_punct_word[0])
+            no_punct_word = DELETE_PUNCTUATION_TOKENIZER.tokenize(word)
+            if len(no_punct_word) > 0:
+                return LEMMATIZER.lemmatize(no_punct_word[0])
+
+def is_multiword(term):
+    '''
+    Returns whether the given term is a multiword or not.
+    '''
+    if term.find('_') >= 0:
+        return True
+    return False
+
+def find_dependecy_root(term):
+    '''
+    This function expects the input term to be a multiword.
+    It finds and returns the root of the dependency tree of the multiword.
+    '''
+    phrase = term.replace('_', ' ')
+    nlp = spacy.load("en_core_web_sm")
+    doc = nlp(phrase)
+
+    for sent in doc.sents:
+        for token in sent:
+            if token.dep_ == "ROOT":
+                return token.text
 
 def find_max_sim_synset(term, fn_contexts):
+    '''
+    Given a term and its context, return the WN synset
+    that maximize the similarity score chosen between
+    bag-of-words and graphic approach.
+    '''
     maxSim = 0
     maxSyns = {}
-
+    term = check_term(term)
     # retrieve synset linked to term
     synsets_of_term = list(wn.synsets(term))
-    
+
+
     for syns in synsets_of_term:
         # build synset context
         syns_context = build_syns_context(syns)
@@ -49,6 +76,16 @@ def find_max_sim_synset(term, fn_contexts):
             maxSim = sim
             maxSyns = syns
     return [maxSyns, maxSim]
+
+def check_term(term):
+    p = term.find('.')
+    # check if term is a lexUnit
+    if p >= 0:
+        term = term[:p] # remove dot and PoS
+    # if term is a multiword, get the root of the dependency tree
+    if len(wn.synsets(term)) == 0 and is_multiword(term):
+        term = find_dependecy_root(term)
+    return term
 
 def build_syns_context(syns):
     '''
@@ -66,6 +103,11 @@ def build_syns_context(syns):
         prep_word = preprocess_word(word.name())
         if prep_word is not None:
             context.add(prep_word)
+    for ex in syns.examples():
+        for word in ex:
+            prep_word = preprocess_word(word)
+            if prep_word is not None:
+                context.add(prep_word)
     context.add(syns.name())
     return context
 
@@ -197,15 +239,21 @@ def lowest_common_subsumer(synset1, synset2): #? My function that simulate the W
     commonsArr.sort(key=lambda x: x[1], reverse=True)
     return commonsArr[0][0]
 
+
 frameSet = [{'id': 2664, 'name': 'Inhibit_motion_scenario'},
             {'id': 1460, 'name': 'Prominence'},
             {'id': 1933, 'name': 'Have_associated'},
             {'id': 370, 'name': 'Morality_evaluation'},
-            {'id': 1771, 'name': 'Thriving'}]
-frames_number = [0,1,2,3,4] # position in frameSet of frames to map
+            {'id': 1771, 'name': 'Thriving'},
+            {'id': 278, 'name': 'Text_creation'},
+            {'id': 2827, 'name': 'Catching_fire'},
+            {'id': 1155, 'name': 'State_continue'},
+            {'id': 2020, 'name': 'Alignment_image_schema'},
+            {'id': 2481, 'name': 'Erasing'}]
+frames_number = [0] # position in frameSet of frames to map
 
 
-res = {} # This dict will have a key for every frame of frameSet, where each frame will have as
+res = {'mapped_frames': []} # This dict will have a key for every frame of frameSet, where each frame will have as
 # value another dictionary, this time with two keys: similarities and not_found_in_wn.
 # The values will be the corresponding lists.
 # Additionally, res will have a key 'mapped_frames' which will contain all frames that will have been mapped
@@ -226,7 +274,6 @@ if os.path.exists(file_path):
         # For every frame we have already mapped, load the results
         json_dict = json.load(f)
         res['mapped_frames'] = json_dict['mapped_frames']
-        all_frames_mapped = True
         for i in frames_number:
             if i in res['mapped_frames']:
                 name = frameSet[i]['name']
@@ -248,7 +295,7 @@ for i in frames_number:
     #pprint(contexts.get_frame_context())
     #pprint(contexts.get_term_contexts())
 
-    for term in contexts.get_frame_context():
+    for term in contexts.get_term_contexts().keys():
         # Find the WN synset that maximizes a similarity measure.
         maxSyns, maxSim = find_max_sim_synset(term, contexts)
         
