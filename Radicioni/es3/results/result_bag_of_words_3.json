@@ -1,0 +1,35 @@
+{
+    "mapped_frames": [
+        0
+    ],
+    "Inhibit_motion_scenario": {
+        "similarities": [
+            [
+                "Inhibit_motion_scenario",
+                "inhibit.v.04",
+                1
+            ],
+            [
+                "Agent",
+                "agent.n.01",
+                2
+            ],
+            [
+                "Theme",
+                "subject.n.01",
+                1
+            ],
+            [
+                "Holding_location",
+                "location.n.04",
+                2
+            ],
+            [
+                "Cause",
+                "cause.n.01",
+                1
+            ]
+        ],
+        "not_found_in_wn": []
+    }
+}

@@ -2,6 +2,14 @@ from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 from nltk.tokenize import RegexpTokenizer
 
+'''
+Questo file serve unicamente per costruire i contesti di FN che vengono usati nell'esercizio 3.
+In particolare un oggetto FrameContexts ha due contesti diversi:
+- frame_context: un set contenente tutte le parole (preproc.) di tutte le definizioni di frame, FE e LU
+- term_context: un dizionario le cui chiavi sono nome del frame, nomi dei FE e nomi delle LU (non preproc.), ciascuna
+delle quali ha come valore i termini preprocessati della corrispondente definizione
+'''
+
 LEMMATIZER = WordNetLemmatizer()
 DELETE_PUNCTUATION_TOKENIZER = RegexpTokenizer(r'\w+')
 
@@ -15,8 +23,6 @@ class FrameContexts():
         self.build_name_context(frame)
         self.build_fes_context(frame)
         self.build_lu_context(frame)
-
-        
         
     def get_term_context(self, term):
         return self.term_context[term]
@@ -29,6 +35,7 @@ class FrameContexts():
 
     def build_name_context(self, frame):
         ctx = self._build_word_definition_context(frame)
+        self.frame_context.add(frame.name)
         self.frame_context.update(ctx)
         self.term_context[self.name] = ctx
 
@@ -57,16 +64,15 @@ class FrameContexts():
             name = self._preprocess_word(lu.name[:p])
             context = set([name]) if name is not None else set()
             context.update(self._build_word_definition_context(lu))
-            self.term_context[name] = context
+            self.term_context[lu.name] = context
             fn_lu_context.update(context)
         self.frame_context.update(fn_lu_context)
-
 
     def _build_word_definition_context(self, fn_word):
         context = set()
         for word in fn_word.definition.split():
             prep_word = self._preprocess_word(word)
-            if prep_word is not None and prep_word != 'cod':
+            if prep_word is not None and prep_word not in ["cod", "fn", "fe"]:
                 context.add(prep_word)
         return context
 
