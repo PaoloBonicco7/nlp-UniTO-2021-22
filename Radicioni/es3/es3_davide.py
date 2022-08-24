@@ -11,8 +11,8 @@ import os
 from FrameContexts import FrameContexts # custom class we made to better utilize context sets
 
 L = 3
-#MODE = 'graphic'
-MODE = 'bag_of_words'
+MODE = 'graphic'
+#MODE = 'bag_of_words'
 LEMMATIZER = WordNetLemmatizer()
 DELETE_PUNCTUATION_TOKENIZER = RegexpTokenizer(r'\w+')
 
@@ -33,7 +33,7 @@ def is_multiword(term):
     '''
     Returns whether the given term is a multiword or not.
     '''
-    if term.find('_') >= 0:
+    if term.find('_') >= 0 or term.find('-') >= 0 or term.find(' '):
         return True
     return False
 
@@ -42,9 +42,18 @@ def find_dependecy_root(term):
     This function expects the input term to be a multiword.
     It finds and returns the root of the dependency tree of the multiword.
     '''
-    phrase = term.replace('_', ' ')
+    p = term.find('_')
+    while p >= 0:
+        term = term[:p] + ' ' + term[p+1:]
+        p = term.find('_')
+
+    p = term.find('-')
+    while p >= 0:
+        term = term[:p] + ' ' + term[p+1:]
+        p = term.find('-')
+
     nlp = spacy.load("en_core_web_sm")
-    doc = nlp(phrase)
+    doc = nlp(term)
 
     for sent in doc.sents:
         for token in sent:
@@ -171,6 +180,8 @@ def normalize_score(score, term, ctxf):
             # We now sum the scores of (Ctx(t), s') pairs
             normalization += compute_score(ctxf.get_term_context(t), s_prime)
     # Return the normalized score
+    if normalization == 0:
+        normalization = 1
     return score/normalization
 
 def syn_distance(synset1, synset2):
@@ -243,14 +254,15 @@ def lowest_common_subsumer(synset1, synset2): #? My function that simulate the W
 frameSet = [{'id': 2664, 'name': 'Inhibit_motion_scenario'},
             {'id': 1460, 'name': 'Prominence'},
             {'id': 1933, 'name': 'Have_associated'},
-            {'id': 370, 'name': 'Morality_evaluation'},
+            {'id': 2585, 'name': 'Revolution'}, # changed from Morality_Evaluation
             {'id': 1771, 'name': 'Thriving'},
             {'id': 278, 'name': 'Text_creation'},
             {'id': 2827, 'name': 'Catching_fire'},
             {'id': 1155, 'name': 'State_continue'},
-            {'id': 2020, 'name': 'Alignment_image_schema'},
+            {'id': 793, 'name': 'Being_born'}, # changed from Alignment_image_schema
             {'id': 2481, 'name': 'Erasing'}]
-frames_number = [0] # position in frameSet of frames to map
+
+frames_number = [0,1,2,3,4,5,6,7,8,9] # position in frameSet of frames to map
 
 
 res = {'mapped_frames': []} # This dict will have a key for every frame of frameSet, where each frame will have as

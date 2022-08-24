@@ -16,7 +16,7 @@ MODE = 'bag_of_words'
 frameSet = [{'id': 2664, 'name': 'Inhibit_motion_scenario'},
             {'id': 1460, 'name': 'Prominence'},
             {'id': 1933, 'name': 'Have_associated'},
-            {'id': 370, 'name': 'Morality_evaluation'},
+            {'id': 2585, 'name': 'Revolution'},
             {'id': 1771, 'name': 'Thriving'},
             {'id': 278, 'name': 'Text_creation'},
             {'id': 2827, 'name': 'Catching_fire'},
@@ -24,6 +24,7 @@ frameSet = [{'id': 2664, 'name': 'Inhibit_motion_scenario'},
             {'id': 2020, 'name': 'Alignment_image_schema'},
             {'id': 2481, 'name': 'Erasing'}]
 frames_number = [0]
+
 res = {}
 valutation_dict = {
     'Inhibit_motion_scenario': {
@@ -44,17 +45,16 @@ if os.path.exists(file_path):
                 name = frameSet[i]['name']
                 print("Loading frame {}.".format(name))
                 res[name] = json_dict[name]
-count = 0
+
 total = 0
 correct = []
 for frame in res.keys():
     for [term, syns, sim] in res[frame]['similarities']:
         total += 1
         if syns == valutation_dict[frame][term]:
-            count+=1
             correct.append(term)
 
-print("Correct: ", count, "\nTotal: ", total, "\nAccuracy: ", count/total)
+print("Correct: ", len(correct), "\nTotal: ", total, "\nAccuracy: ", len(correct)/total)
 print(correct)
 
 '''
