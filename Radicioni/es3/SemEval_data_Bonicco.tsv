@@ -1,51 +1,51 @@
-Term1	Term2	Similarity
-biotopo	biologia
-magma	vulcano
-brainstorming	telescopio
-livello	punteggio
-centesimo	affare
-partito politico	associazione
-tsunami	mare
-struzzo	frutteto
-cannella	caramella
-scopa	polvere
-galassia	astronomo
-succo	frappè
-tapparella	tenda
-criminale	colpevole
-cancro al pancreas	chemioterapia
-passato	antecedente
-Nazioni Unite	Parlamento Europeo
-canzone	esecutore
-pistola	taccuino
-acetilcolina	iride
-alfabeto	penna
-coro	cantante
-legno	coperta
-soldato	pace
-inglese	americano
-lucertola	coccodrillo
-denaro	contante
-Polpo Paul	polpo
-calendario	vacanza
-base	sostanza chimica
-governo	lucertola
-JPY	riciclaggio di denaro
-DeepMind	Google DeepMind
-scacchi	scacco al re
-sonetto	bellezza
-lavoratore	ufficio
-valuta	scambio
-poliestere	cotone
-tribunale	giustizia
-coda	retro
-incidente	libro
-groppo	vento
-piano	armonia
-sultano	ministero
-deserto	duna
-moltiplicazione	divisione
-virus	sangue
-era glaciale	statuto
-spada	ambiente
-scuola elementare	penna
+Term1	Term2	Similarity 1	Similarity 2	Mean		Pearson 	Spearman		NOSTRI Synset Term 1	NOSTRI Synset Term 2		Synset Term 1	Synset Term 2		Cosine Similarity
+biotopo	biologia														
+magma	vulcano														
+brainstorming	telescopio														
+livello	punteggio														
+centesimo	affare														
+partito politico	associazione														
+tsunami	mare														
+struzzo	frutteto														
+cannella	caramella														
+scopa	polvere														
+galassia	astronomo														
+succo	frappè														
+tapparella	tenda														
+criminale	colpevole														
+cancro al pancreas	chemioterapia														
+passato	antecedente														
+Nazioni Unite	Parlamento Europeo														
+canzone	esecutore														
+pistola	taccuino														
+acetilcolina	iride														
+alfabeto	penna														
+coro	cantante														
+legno	coperta														
+soldato	pace														
+inglese	americano														
+lucertola	coccodrillo														
+denaro	contante														
+Polpo Paul	polpo														
+calendario	vacanza														
+base	sostanza chimica														
+governo	lucertola														
+JPY	riciclaggio di denaro														
+DeepMind	Google DeepMind														
+scacchi	scacco al re														
+sonetto	bellezza														
+lavoratore	ufficio														
+valuta	scambio														
+poliestere	cotone														
+tribunale	giustizia														
+coda	retro														
+incidente	libro														
+groppo	vento														
+piano	armonia														
+sultano	ministero														
+deserto	duna														
+moltiplicazione	divisione														
+virus	sangue														
+era glaciale	statuto														
+spada	ambiente														
+scuola elementare	penna														
