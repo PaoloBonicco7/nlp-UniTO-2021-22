@@ -109,7 +109,7 @@ for i in frames_number:
 
 valutation_dict = {
     'Inhibit_motion_scenario': {
-        'Agent': 'agentive_role.n.01',
+        'Agent': 'agent.n.01',
         'Cause': 'causal_agent.n.01',
         'Holding_location': 'placement.n.03',
         'Inhibit_motion_scenario': 'inhibit.v.04',

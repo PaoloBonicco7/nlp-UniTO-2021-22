@@ -16,9 +16,6 @@ MODE = 'graphic'
 LEMMATIZER = WordNetLemmatizer()
 DELETE_PUNCTUATION_TOKENIZER = RegexpTokenizer(r'\w+')
 
-# TO-DO LIST:
-# [] LU che sono stop words
-
 def flatten(l):
     return [item for sublist in l for item in sublist]
 
@@ -130,7 +127,7 @@ def similarity(term, ctxf, syns, ctxs):
     '''
     sim = 0
     if (MODE == 'bag_of_words'):
-        sim = len(ctxs & ctxf.get_frame_context())
+        sim = len(ctxs & ctxf.get_frame_context()) + 1
     elif (MODE == 'graphic'):
         sim = _graphic_similarity(term, ctxf, syns)
     #print("Normalized score: {}".format(sim))   
@@ -272,11 +269,6 @@ res = {'mapped_frames': []} # This dict will have a key for every frame of frame
 # res = {'frame0': {'similarities': [...], 'not_found_in_wn': [...] },
 #       'frame1': {'similarities': [...], 'not_found_in_wn': [...] },
 #       'mapped_frames': [0,1] }
-not_found_in_wn = [] # This list will contain all the terms of a frame that were not found in wordnet
-similarities = [] # List of triplettes of the form '[term, syns, sim]' where
-# - 'term' is a FN term from the frame,
-# - 'syns' is the WN synset mapped to that term,
-# - 'sim' is the similarity score that was calcuted with either a bag-of-words approach or a graphic approach
 
 # First we check if a file exists in which the parameters are the same as this run
 file_path = 'results/result_{}_{}.json'.format(MODE,L)
@@ -298,6 +290,12 @@ if os.path.exists(file_path):
 
 # Compute the results for every frame left
 for i in frames_number:
+    not_found_in_wn = [] # This list will contain all the terms of a frame that were not found in wordnet
+    similarities = [] # List of triplettes of the form '[term, syns, sim]' where
+    # - 'term' is a FN term from the frame,
+    # - 'syns' is the WN synset mapped to that term,
+    # - 'sim' is the similarity score that was calcuted with either a bag-of-words approach or a graphic approach
+
     # Get one of the frames
     frame = fn.frame( frameSet[i]['id'] )
     res[frame.name] = {'similarities': [], 'not_found_in_wn': []}
@@ -321,8 +319,8 @@ for i in frames_number:
         print(term, maxSyns, maxSim)
 
     res['mapped_frames'].append(i)
-    res[frame.name]['similarities'] = similarities
-    res[frame.name]['not_found_in_wn'] = not_found_in_wn
+    res[frame.name]['similarities'] = similarities.copy()
+    res[frame.name]['not_found_in_wn'] = not_found_in_wn.copy()
 
 # Once every term has been mapped, save the results in a JSON file
 with open(file_path, 'w') as f:
