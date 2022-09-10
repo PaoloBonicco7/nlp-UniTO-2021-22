@@ -73,7 +73,7 @@ frameSet = [{'id': 2664, 'name': 'Inhibit_motion_scenario'},
             {'id': 793, 'name': 'Being_born'},
             {'id': 2481, 'name': 'Erasing'}]
 
-frames_number = [9]
+frames_number = [5]
 
 res = {}
 

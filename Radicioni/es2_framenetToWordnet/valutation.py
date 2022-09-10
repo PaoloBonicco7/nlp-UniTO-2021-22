@@ -10,7 +10,7 @@ valutation_dict, e dividendo il numero così ottenuto per il num totale di eleme
 '''
 
 L = 3
-#MODE = 'graphic'
+# MODE = 'graphic'
 MODE = 'bag_of_words'
 
 frameSet = [{'id': 2664, 'name': 'Inhibit_motion_scenario'},
