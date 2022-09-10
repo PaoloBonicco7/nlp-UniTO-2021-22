@@ -69,7 +69,6 @@ def find_max_sim_synset(term, fn_contexts):
     # retrieve synset linked to term
     synsets_of_term = list(wn.synsets(term))
 
-
     for syns in synsets_of_term:
         # build synset context
         syns_context = build_syns_context(syns)
@@ -155,10 +154,10 @@ def compute_score(ctxf, s):
     for t in ctxf:
         synsets = wn.synsets(t)
         for s_prime in synsets:
-            length = syn_distance(s, s_prime)
-            if length is None or length > L:
-                continue
-            score += math.e**(-length+1)
+            lengths = syn_distance(s, s_prime)
+            if lengths is not None:
+                for length in lengths:
+                    score += math.e**(-length+1)
     return score
 
 def normalize_score(score, term, ctxf):
@@ -167,13 +166,12 @@ def normalize_score(score, term, ctxf):
     the words in the given context.
     '''
     normalization = 0
-    for t in ctxf.get_term_contexts().keys():
-        # Here 't' will be one of the following:
-        # a frame name, a FE name or a LU name
-
-        # We retrieve the synsets linked to 'term'
-        synsets = wn.synsets(term)
-        for s_prime in synsets:
+    # We retrieve the synsets linked to 'term'
+    synsets = wn.synsets(term)
+    for s_prime in synsets:
+        for t in ctxf.get_term_contexts().keys():
+            # Here 't' will be one of the following:
+            # a frame name, a FE name or a LU name
             # We now sum the scores of (Ctx(t), s') pairs
             normalization += compute_score(ctxf.get_term_context(t), s_prime)
     # Return the normalized score
@@ -193,29 +191,34 @@ def syn_distance(synset1, synset2):
     if lcs is None:
         return None
 
+    #print(synset1, synset2)
     hypernym1 = synset1.hypernym_paths()
+    #print("Hypernym1: {}".format(hypernym1))
     hypernym2 = synset2.hypernym_paths()
+    #print("Hypernym2: {}".format(hypernym2))
+    common_hyps = synset1.common_hypernyms(synset2)
 
-    # paths from LCS to root
-    hypernym_lcs = lcs.hypernym_paths()
+    lengths_list = list()
+    for common_hypernym in common_hyps:
+        #print(common_hypernym)
+        # remove paths without common_hypernym
+        tmp1 = list(filter(lambda x: common_hypernym in x, hypernym1))
+        tmp2 = list(filter(lambda x: common_hypernym in x, hypernym2))
 
-    # create a set of unique items flattening the nested list
-    #print(hypernym_lcs)
-    set_lcs = set(flatten(hypernym_lcs))
-    #print(set_lcs)
+        # get positions of common_hypernym in every path of hypernym1 and hypernym2
+        positions1 = list(map(lambda x: len(x) - x.index(common_hypernym), tmp1)) # len - index = position from the end
+        positions2 = list(map(lambda x: len(x) - x.index(common_hypernym), tmp2))
 
-    # remove root
-    set_lcs.remove(lcs)
+        #print(positions1)
+        # sum
+        for pos1 in positions1:
+            for pos2 in positions2:
+                sum = pos1 + pos2
+                if sum <= L:
+                    lengths_list.append(sum)
 
-    # path from synset to LCS
-    hypernym1 = list(map(lambda x: [y for y in x if y not in set_lcs], hypernym1))
-    hypernym2 = list(map(lambda x: [y for y in x if y not in set_lcs], hypernym2))
-
-    # path containing LCS
-    hypernym1 = list(filter(lambda x: lcs in x, hypernym1))
-    hypernym2 = list(filter(lambda x: lcs in x, hypernym2))
-
-    return min(list(map(lambda x: len(x), hypernym1))) + min(list(map(lambda x: len(x), hypernym2))) - 2
+    #print(lengths_list)
+    return lengths_list
 
 def lowest_common_subsumer(synset1, synset2): #? My function that simulate the WordNet function
     '''
@@ -305,6 +308,8 @@ for i in frames_number:
     #pprint(contexts.get_frame_context())
     #pprint(contexts.get_term_contexts())
 
+    #print(contexts.get_term_context('Prominence'))
+    
     for term in contexts.get_term_contexts().keys():
         # Find the WN synset that maximizes a similarity measure.
         maxSyns, maxSim = find_max_sim_synset(term, contexts)
@@ -321,10 +326,11 @@ for i in frames_number:
     res['mapped_frames'].append(i)
     res[frame.name]['similarities'] = similarities.copy()
     res[frame.name]['not_found_in_wn'] = not_found_in_wn.copy()
-
+    
 # Once every term has been mapped, save the results in a JSON file
 with open(file_path, 'w') as f:
     json.dump(res,f, indent=4)
+    
 
 print("Program ended. Mapped frames: {}".format(res.keys()))
 

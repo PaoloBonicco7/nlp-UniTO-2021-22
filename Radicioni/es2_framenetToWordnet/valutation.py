@@ -57,8 +57,3 @@ for frame in res.keys():
 print("Correct: ", len(correct), "\nTotal: ", total, "\nAccuracy: ", len(correct)/total)
 print(correct)
 
-'''
-res = {'Inhibit_motion_scenario': {'similarities': [...], 'not_found_in_wn': [...] },
-           'frame1': {'similarities': [...], 'not_found_in_wn': [...] },
-           'mapped_frames': [0,1] }
-'''
