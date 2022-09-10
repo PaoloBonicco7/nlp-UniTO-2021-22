@@ -9,10 +9,14 @@ from pprint import pprint
 import json
 import os
 from FrameContexts import FrameContexts # custom class we made to better utilize context sets
+import time
 
-L = 3
+
+#! Appunto per Paolo - Eseguire con conda
+
+L = 5
 MODE = 'graphic'
-#MODE = 'bag_of_words'
+# MODE = 'bag_of_words'
 LEMMATIZER = WordNetLemmatizer()
 DELETE_PUNCTUATION_TOKENIZER = RegexpTokenizer(r'\w+')
 
@@ -250,7 +254,6 @@ def lowest_common_subsumer(synset1, synset2): #? My function that simulate the W
     commonsArr.sort(key=lambda x: x[1], reverse=True)
     return commonsArr[0][0]
 
-
 frameSet = [{'id': 2664, 'name': 'Inhibit_motion_scenario'},
             {'id': 1460, 'name': 'Prominence'},
             {'id': 1933, 'name': 'Have_associated'},
@@ -262,8 +265,8 @@ frameSet = [{'id': 2664, 'name': 'Inhibit_motion_scenario'},
             {'id': 793, 'name': 'Being_born'}, # changed from Alignment_image_schema
             {'id': 2481, 'name': 'Erasing'}]
 
-frames_number = [0,1,2,3,4,5,6,7,8,9] # position in frameSet of frames to map
-
+# frames_number = [0,1,2,3,4,5,6,7,8,9] # position in frameSet of frames to map
+frames_number = [0]
 
 res = {'mapped_frames': []} # This dict will have a key for every frame of frameSet, where each frame will have as
 # value another dictionary, this time with two keys: similarities and not_found_in_wn.
@@ -292,6 +295,7 @@ if os.path.exists(file_path):
         frames_number = list(set(frames_number) - set(mapped_frames))
 
 # Compute the results for every frame left
+start_time = time.time()
 for i in frames_number:
     not_found_in_wn = [] # This list will contain all the terms of a frame that were not found in wordnet
     similarities = [] # List of triplettes of the form '[term, syns, sim]' where
@@ -330,7 +334,7 @@ for i in frames_number:
 # Once every term has been mapped, save the results in a JSON file
 with open(file_path, 'w') as f:
     json.dump(res,f, indent=4)
-    
-
+        
 print("Program ended. Mapped frames: {}".format(res.keys()))
 
+print("--- Ended in %s seconds ---" % (time.time() - start_time))
