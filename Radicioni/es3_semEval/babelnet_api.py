@@ -6,6 +6,8 @@ from pprint import pprint
 KEY = '4ac4317e-cf96-4222-ba17-753d12dc7a2f'
 URL = 'https://babelnet.io/v7/getSynset?id={}&key={}&targetLang=IT&searchLang=IT'
 
+#! Attenzione ai path che sono vecchi
+
 def terms_list(path):
     terms = []
 
