@@ -32,7 +32,7 @@ The 3 different mesure of similarity are:
   - The value of sim_path is between 0 and 2 * depthMax
 
 - *Leakcock & Chodorow*:
-  - simLC (s1, s2) =  log [len(s1, s2) / 2 · depthMax]
+  - simLC (s1, s2) =  - log [len(s1, s2) / 2 · depthMax]
     - To avoid log(0) we add 1 to the numerator and denominator
   - thus the values of simLC(s1,s2) are in the interval [0,log(2*depthMax +1)]
 

@@ -1,0 +1,35 @@
+{
+    "mapped_frames": [
+        0
+    ],
+    "Inhibit_motion_scenario": {
+        "similarities": [
+            [
+                "Inhibit_motion_scenario",
+                "scenario.n.01",
+                0.3333333333333333
+            ],
+            [
+                "Agent",
+                "agent.n.03",
+                0.07776588227804165
+            ],
+            [
+                "Theme",
+                "theme.n.02",
+                0.037944152261906776
+            ],
+            [
+                "Holding_location",
+                "placement.n.03",
+                0.2784073380735244
+            ],
+            [
+                "Cause",
+                "lawsuit.n.01",
+                0.3021353053765961
+            ]
+        ],
+        "not_found_in_wn": []
+    }
+}

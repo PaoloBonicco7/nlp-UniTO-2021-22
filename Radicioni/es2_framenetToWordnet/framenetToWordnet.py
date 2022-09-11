@@ -14,7 +14,7 @@ import time
 
 #! Appunto per Paolo - Eseguire con conda
 
-L = 5
+L = 6
 MODE = 'graphic'
 # MODE = 'bag_of_words'
 LEMMATIZER = WordNetLemmatizer()
@@ -265,8 +265,8 @@ frameSet = [{'id': 2664, 'name': 'Inhibit_motion_scenario'},
             {'id': 793, 'name': 'Being_born'}, # changed from Alignment_image_schema
             {'id': 2481, 'name': 'Erasing'}]
 
-# frames_number = [0,1,2,3,4,5,6,7,8,9] # position in frameSet of frames to map
-frames_number = [0]
+frames_number = [0,1,2,3,4,5,6,7,8,9] # position in frameSet of frames to map
+# frames_number = [0]
 
 res = {'mapped_frames': []} # This dict will have a key for every frame of frameSet, where each frame will have as
 # value another dictionary, this time with two keys: similarities and not_found_in_wn.
@@ -277,7 +277,10 @@ res = {'mapped_frames': []} # This dict will have a key for every frame of frame
 #       'mapped_frames': [0,1] }
 
 # First we check if a file exists in which the parameters are the same as this run
-file_path = 'results/result_{}_{}.json'.format(MODE,L)
+
+# file_path = '/results/result_{}_{}.json'.format(MODE,L)
+file_path = '/Users/paolobonicco/Projects/nlp-UniTO-2021-22/Radicioni/es2_framenetToWordnet/results/result_{}_{}.json'.format(MODE,L)
+
 if os.path.exists(file_path):
     mapped_frames = []
     with open(file_path, 'r') as f:
